@@ -72,6 +72,10 @@ class StoryMenu extends MusicBeatUIState
 		
 		changeDiff();
 		
+		#if mobile
+		addVirtualPad(NONE, B);
+		#end
+		
 		// intro anim below
 		if (firstTime)
 		{
@@ -132,7 +136,7 @@ class StoryMenu extends MusicBeatUIState
 				}
 			}
 			
-			if (controls.BACK || FlxG.mouse.justPressedRight)
+			if (controls.BACK #if (desktop || linux) || FlxG.mouse.justPressedRight #end)
 			{
 				canSelect = false;
 				FlxG.sound.play(Paths.sound('cancelMenu'));

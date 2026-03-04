@@ -134,6 +134,11 @@ class PauseSubState extends MusicBeatSubstate
 		ditherShader = new DitherShader();
 		ditherShader.transparency = 0;
 		
+		#if mobile
+		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPadCamera();
+		#end
+		
 		CoolUtil.addShader(ditherShader, camera);
 		FlxTween.tween(ditherShader, {transparency: 1}, 0.25);
 	}

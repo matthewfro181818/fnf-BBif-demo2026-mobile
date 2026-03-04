@@ -62,6 +62,9 @@ class PlayMenuState extends MusicBeatState
 		descriptionTxt.shader = new ChalkShader();
 		
 		changeSel();
+		
+		addVirtualPad(NONE, B);
+		addVirtualPadCamera();
 	}
 	
 	var selectedSomething:Bool = false;
@@ -108,7 +111,7 @@ class PlayMenuState extends MusicBeatState
 						FlxG.switchState(() -> new funkin.states.freeplay.FreeplayState());
 				}
 			}
-			else if (FlxG.mouse.justPressedRight || controls.BACK)
+			else if (#if (desktop || linux) FlxG.mouse.justPressedRight || #end controls.BACK)
 			{
 				selectedSomething = true;
 				

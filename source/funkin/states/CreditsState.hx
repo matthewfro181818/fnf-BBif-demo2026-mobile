@@ -75,6 +75,11 @@ class CreditsState extends MusicBeatState
 			
 			"",
 			
+			"StarNova/Cream.BR - Unofficial Mobile Port",
+			"FNF BR - Unofficial Mobile Port",
+			
+			"",
+			
 			"And the rest of The Teachers Lounge!",
 		];
 		
@@ -104,6 +109,11 @@ class CreditsState extends MusicBeatState
 		add(loungeIcon);
 		
 		loungeIcon.screenCenter(X);
+		
+		#if mobile
+		addVirtualPad(UP_DOWN, B);
+		addVirtualPadCamera();
+		#end
 		
 		var keyString = [for (i in ClientPrefs.keyBinds.get('accept').concat(ClientPrefs.keyBinds.get('back'))) InputFormatter.getKeyName(i)].join(', ');
 		

@@ -23,6 +23,7 @@ jobs:
          haxelib run hxpkg install
          haxelib remove lime
          haxelib git lime https://github.com/FunkinCrew/lime mobile/main --quiet
+         haxelib run lime rebuild hxcpp
       - name: Compile
         run: haxelib run lime build ios -nosign
 

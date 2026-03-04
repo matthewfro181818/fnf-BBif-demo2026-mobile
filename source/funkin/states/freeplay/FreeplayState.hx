@@ -155,6 +155,11 @@ class FreeplayState extends MusicBeatUIState
 			jukeBox.diffDown.color = jukeBox.diffText.color;
 		}
 		
+		#if mobile
+		addVirtualPad(NONE, B);
+		virtualPad.y -= 50;
+		#end
+		
 		curDifficulty = FlxMath.maxInt(0, Difficulty.defaultList.indexOf(lastDifficulty));
 		
 		super.create();
