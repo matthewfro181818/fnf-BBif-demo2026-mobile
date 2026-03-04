@@ -72,11 +72,6 @@ class LessonPopUp extends MusicBeatSubstate
 		ruler.angle = 360;
 		ruler.offset2.y = FlxG.height;
 		
-		#if mobile
-		addVirtualPad(NONE, A_B);
-		addVirtualPadCamera();
-		#end
-		
 		FlxG.sound.play(Paths.sound('freeplay/ruler ok'));
 		
 		FlxTween.tween(bg, {alpha: 0.6}, 0.7);
@@ -93,8 +88,6 @@ class LessonPopUp extends MusicBeatSubstate
 	function transitionOut()
 	{
 		FlxG.sound.play(Paths.sound('freeplay/ruler back'));
-		
-		removeVirtualPad();
 		
 		FlxTween.tween(glow, {alpha: 0}, 0.2, {framerate: 24});
 		FlxTween.tween(goodMix, {alpha: 0}, 0.3, {framerate: 24});
@@ -165,6 +158,12 @@ class LessonPopUp extends MusicBeatSubstate
 								onComplete: Void -> CoolUtil.switchStateAndStopMusic(() -> new PlayState())
 							});
 					}
+				}
+				@:privateAccess
+				else if (controls.BACK #if mobile || (cast FlxG.state : FreeplayState).virtualPad.buttonA.justPressed #end)
+				{
+					canInteract = false;
+					transitionOut();
 				}
 			}
 			else if (controls.UI_DOWN_P || controls.UI_UP_P || controls.UI_LEFT_P || controls.UI_RIGHT_P)
