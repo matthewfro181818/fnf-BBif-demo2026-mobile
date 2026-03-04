@@ -46,6 +46,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
 		
+		#if mobile
+		if (!controls.isInSubstate)
+            controls.isInSubstate = true;
+        #end
+		
 		// avoids lagspikes while scrolling through menus!
 		grpOptions = new FlxTypedGroup<OptionFlxText>();
 		addBehind(grpOptions);
@@ -110,6 +115,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		underline.y = grpOptions.members[0].y + grpOptions.members[0].height;
 		addBehind(underline);
 		
+		addVirtualPad(LEFT_FULL, A_B);
+		addVirtualPadCamera();
+		
 		changeSelection();
 		reloadCheckboxes();
 	}
@@ -169,7 +177,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			changeSelection(1);
 		}
 		
-		if (controls.BACK || FlxG.mouse.justPressedRight)
+		if (controls.BACK #if (desktop || linux) || FlxG.mouse.justPressedRight #end)
 		{
 			close();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
@@ -179,7 +187,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		{
 			if (curOption.type == 'bool')
 			{
-				if (controls.ACCEPT || FlxG.mouse.justPressed)
+				if (controls.ACCEPT #if (desktop || linux) || FlxG.mouse.justPressed #end)
 				{
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 					curOption.setValue((curOption.getValue() == true) ? false : true);
@@ -191,7 +199,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			{
 				if (curOption.type == 'keybind')
 				{
-					if (controls.ACCEPT || FlxG.mouse.justPressed)
+					if (controls.ACCEPT #if (desktop || linux) || FlxG.mouse.justPressed #end)
 					{
 						bindingBlack = new FlxSprite().makeGraphic(1, 1, FlxColor.WHITE);
 						bindingBlack.scale.set(FlxG.width, FlxG.height);

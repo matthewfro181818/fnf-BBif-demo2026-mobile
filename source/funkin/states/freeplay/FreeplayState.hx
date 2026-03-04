@@ -157,7 +157,7 @@ class FreeplayState extends MusicBeatUIState
 		
 		#if mobile
 		addVirtualPad(NONE, B);
-		virtualPad.y -= 50;
+		addVirtualPadCamera();
 		#end
 		
 		curDifficulty = FlxMath.maxInt(0, Difficulty.defaultList.indexOf(lastDifficulty));

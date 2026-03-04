@@ -86,6 +86,11 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		super.update(elapsed);
 		
+		#if mobile
+		if (controls.isInSubstate)
+            controls.isInSubstate = false;
+        #end
+		
 		PlayState.instance.callOnScripts('onUpdate', [elapsed]);
 		
 		if (controls.ACCEPT)

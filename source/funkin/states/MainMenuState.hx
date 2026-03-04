@@ -291,6 +291,11 @@ class MainMenuState extends MusicBeatUIState
 	{
 		super.update(elapsed);
 		
+		#if mobile
+		if (controls.isInSubstate)
+            controls.isInSubstate = false;
+        #end
+		
 		if (canSelect)
 		{
 			if (FlxG.mouse.justMoved)

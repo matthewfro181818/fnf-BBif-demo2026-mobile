@@ -127,17 +127,17 @@ class PauseSubState extends MusicBeatSubstate
 		underline.updateHitbox();
 		add(underline);
 		
+		#if mobile
+		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPadCamera();
+		#end
+		
 		regenMenu();
 		
 		forEachOfType(FlxSprite, spr -> spr.scrollFactor.set());
 		
 		ditherShader = new DitherShader();
 		ditherShader.transparency = 0;
-		
-		#if mobile
-		addVirtualPad(UP_DOWN, A_B);
-		addVirtualPadCamera();
-		#end
 		
 		CoolUtil.addShader(ditherShader, camera);
 		FlxTween.tween(ditherShader, {transparency: 1}, 0.25);
@@ -152,6 +152,11 @@ class PauseSubState extends MusicBeatSubstate
 		if (pauseMusic.volume < 0.5) pauseMusic.volume += 0.01 * elapsed;
 		
 		super.update(elapsed);
+		
+		#if mobile
+		if (controls.isInSubstate)
+            controls.isInSubstate = false;
+        #end
 		
 		if (controls.BACK)
 		{

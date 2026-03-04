@@ -1768,6 +1768,11 @@ class PlayState extends MusicBeatState
 		
 		callOnScripts('onUpdate', [elapsed]);
 		
+		#if mobile
+		if (controls.isInSubstate)
+            controls.isInSubstate = false;
+        #end
+		
 		if (generatedMusic && !endingSong && !isCameraOnForcedPos) moveCamera();
 		
 		// if (combo >= 10) showCombo = true;
