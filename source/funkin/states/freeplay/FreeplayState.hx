@@ -156,7 +156,7 @@ class FreeplayState extends MusicBeatUIState
 		}
 		
 		#if mobile
-		addVirtualPad(NONE, B, C);
+		addVirtualPad(NONE, B_C);
 		addVirtualPadCamera();
 		#end
 		
