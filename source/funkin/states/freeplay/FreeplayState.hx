@@ -277,7 +277,7 @@ class FreeplayState extends MusicBeatUIState
 				canInteract = false;
 				FlxG.switchState(() -> new PlayMenuState());
 			}
-			else if (FlxG.keys.justPressed.CONTROL)
+			else if (FlxG.keys.justPressed.CONTROL || virtualPad.buttonC.justPressed)
 			{
 				persistentUpdate = false;
 				openSubState(new funkin.substates.GameplayChangersSubstate());
