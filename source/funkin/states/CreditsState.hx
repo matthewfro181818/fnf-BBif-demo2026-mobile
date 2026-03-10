@@ -111,7 +111,7 @@ class CreditsState extends MusicBeatState
 		loungeIcon.screenCenter(X);
 		
 		#if mobile
-		addVirtualPad(UP_DOWN, B);
+		addVirtualPad(LEFT_FULL, B);
 		addVirtualPadCamera();
 		#end
 		
