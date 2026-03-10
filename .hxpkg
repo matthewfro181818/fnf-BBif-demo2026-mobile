@@ -35,6 +35,8 @@
 			},
 			{
 				"name": "lime",
+				"link": "https://github.com/kittycathy233/lime",
+				"branch": "main",
 				"version": "8.1.3"
 			},
 			{
@@ -52,8 +54,8 @@
 			},
 			{
 				"name": "hxcpp",
-				"link": "https://github.com/MaysLastPlays-Stuff/hxcpp-h",
-				"branch": "master"
+				"link": "https://github.com/HaxeFoundation/hxcpp",
+				"branch": "8268ef2d518b1e7c8e8494114d0bdf6b5bc4147d"
 			},
 			{
 				"name": "hscript",
@@ -66,7 +68,16 @@
 			{
 				"name": "away3d",
 				"version": "5.0.9"
-			}
+			},
+			{
+				"name": "hxini",
+				"version": "3.0.0"
+			},
+			{
+	 	        "name": "extension-androidtools",
+	            "link": "https://github.com/MAJigsaw77/extension-androidtools",
+	 	        "branch": "main"
+		    }
 		]
 	}
 ]
