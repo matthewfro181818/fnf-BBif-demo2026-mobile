@@ -1,46 +1,80 @@
-name: iOS Build
+name: Mobile-Ios
 
-on: workflow_dispatch
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    name: iOS Build
-    permissions: write-all
-    runs-on: macos-15
+  Build-iOS:
+    runs-on: macos-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@main
-
-      - name: Setup Haxe
-        uses: krdlab/setup-haxe@master
+      - uses: actions/checkout@v4
         with:
-          haxe-version: 4.3.7
-          
-      - name: Install Libraries
-        run: |
-         haxelib install hxpkg --global
-         haxelib run hxpkg setup --global
-         haxelib run hxpkg install
-         haxelib remove lime
-         haxelib remove hxcpp
-         haxelib git lime https://github.com/FunkinCrew/lime mobile/main --quiet
-         haxelib git hxcpp https://github.com/FunkinCrew/hxcpp 5932340d095a7eea8635fe4d1355f1c0efd0b3c2 --quiet
-         haxelib run lime rebuild hxcpp
-      - name: Compile
-        run: haxelib run lime build ios -nosign
+          fetch-depth: 0
 
-      - name: Making ipa file
+      - name: Determine Version
+        id: ver
         run: |
-          brew install ldid
-          cd export/release/ios/build/Release-iphoneos/BaldiFunkin.app
-          ldid -S../../../BaldiFunkin/BaldiFunkin.entitlements BaldiFunkin
-          cd ..
+          if git describe --tags --exact-match >/dev/null 2>&1; then
+            echo "version=$(git describe --tags --exact-match)" >> $GITHUB_OUTPUT
+          else
+            echo "version=dev-$(date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.3.6
+
+      - name: Install Haxelib Dependencies
+        run: |
+          haxelib install hxpkg --global
+          haxelib run hxpkg setup --global
+          haxelib run hxpkg install
+
+      - name: Generate iOS C++
+        run: |
+          haxelib run lime build ios -nosign -DofficialBuild -DMOBILE_BUILD -D HXCPP_CPP11 || true
+
+      - name: Patch thx.Nil automatically
+        run: |
+          echo "=== Running UNIVERSAL thx.Nil PATCHER ==="
+
+          ROOTS=(
+            "./export/ios/obj"
+            "./bin/ios/BaldiFunkin/haxe/build"
+            "./bin/ios/BaldiFunkin/haxe/build/Release-iphoneos-64"
+          )
+
+          patched=0
+
+          for root in "${ROOTS[@]}"; do
+            if [ ! -d "$root" ]; then
+              continue
+            fi
+
+            # Find all C/C++/ObjC++ files and patch Nil → ThxNil
+            while IFS= read -r -d '' file; do
+              perl -pi -e 's/\bNil\b/ThxNil/g; s/thx::Nil/thx::ThxNil/g' "$file" && patched=$((patched+1))
+            done < <(find "$root" -type f \( -name "*.h" -o -name "*.hpp" -o -name "*.cpp" -o -name "*.mm" \) -print0)
+          done
+
+          echo "Patched ${patched} file(s)."
+          echo "=== Patch Completed ==="
+
+      - name: Build iOS (Final)
+        run: |
+          haxelib run lime build ios -nosign -DofficialBuild -DMOBILE_BUILD -D HXCPP_CPP11
+
+      - name: Package IPA
+        run: |
+          cd export/release/ios/build/*-iphoneos
           mkdir Payload
-          mv BaldiFunkin.app Payload
-          zip -r BaldiFunkin.ipa Payload
-      - name: Upload Artifact
-        uses: actions/upload-artifact@main
+          mv *.app Payload/
+          zip -r ~/ios-${{ steps.ver.outputs.version }}.ipa Payload
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: BaldiFunkin iOS
-          path: export/release/ios/build/Release-iphoneos/*.ipa
-          if-no-files-found: error
+          name: ios-ipa
+          path: ~/ios-*.ipa
