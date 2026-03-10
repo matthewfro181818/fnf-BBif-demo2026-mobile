@@ -82,6 +82,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	{
 		super();
 		
+		Controls.instance.isInSubstate = true;
+		
 		var bg:FlxSprite = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		bg.scale.set(FlxG.camera.viewWidth, FlxG.camera.viewHeight);
 		bg.updateHitbox();
@@ -149,11 +151,16 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		reloadCheckboxes();
 		
 		#if mobile
-		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPad(LEFT_FULL, A_B);
 		addVirtualPadCamera();
 		#end
-	}
-	
+	}	
+	override function destroy()
+	{
+		super.destroy();
+		
+		Controls.instance.isInSubstate = false;
+	}	
 	var nextAccept:Int = 5;
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
