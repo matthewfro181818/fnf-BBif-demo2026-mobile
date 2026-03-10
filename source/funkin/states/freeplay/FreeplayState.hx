@@ -31,6 +31,7 @@ import funkin.backend.MusicBeatUIState;
 import funkin.objects.OffsetSprite;
 import funkin.states.freeplay.LessonPopUp;
 import funkin.states.freeplay.PaldoPopUp;
+import funkin.substates.GameplayChangersSubstate;
 
 @:access(flixel.FlxCamera)
 @:access(flixel.text)
@@ -277,10 +278,15 @@ class FreeplayState extends MusicBeatUIState
 				canInteract = false;
 				FlxG.switchState(() -> new PlayMenuState());
 			}
-			else if (FlxG.keys.justPressed.CONTROL || virtualPad.buttonC.justPressed)
+			else if (
+				FlxG.keys.justPressed.CONTROL
+				#if mobile
+				|| virtualPad.buttonC.justPressed
+				#end
+			)
 			{
 				persistentUpdate = false;
-				openSubState(new funkin.substates.GameplayChangersSubstate());
+				openSubState(new GameplayChangersSubstate());
 			}
 			else if (FlxG.keys.justPressed.SPACE
 				|| (FlxG.mouse.overlaps(jukeBox) && FlxG.mouse.justPressed) #if !debug && !songMetas.members[curSel].isHidden #end)
